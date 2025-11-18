@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>排球少年 TOUCH THE DREAM 日服卡池日曆</title>
+<style>
+  :root{
+    --page-bg:#F2F6F7;
+    --card-bg:#fff;
+    --accent:#0e104d;
+    --text:#111;
+    --muted:#666;
+  }
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans CJK TC",sans-serif;background:var(--page-bg);color:var(--text)}
+  .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;padding:20px 12px;box-sizing:border-box}
+  header{width:100%;max-width:1200px;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .logo{width:56px;height:56px;border-radius:10px;background:#eef0ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)}
+  h1{margin:0;line-height: 1.4;}
+  .note{color:var(--muted);font-size:0.9rem}
+  .table-wrap{width:100%;max-width:1200px;background:var(--card-bg);box-shadow:0 6px 18px rgba(37,41,75,0.06);border-radius:8px;padding:8px;box-sizing:border-box}
+  table{width:100%;border-collapse:collapse;margin:0 auto;table-layout:fixed;}
+  thead th{position:relative;background:#F2F6F7;padding:10px;text-align:left;font-weight:700;border-bottom:1px solid #eee}
+  thead th .filterBtn{position:absolute;right:8px;top:6px;border:0;background:transparent;cursor:pointer;font-size:20px}<!---->
+  .filterPanel{position:absolute;right:6px;top:32px;z-index:30;background:#fff;border:1px solid #e6e6ee;box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:8px;border-radius:8px;width:260px;max-height:360px;overflow:auto}
+  .filterPanel .search{width:100%;padding:6px;border-radius:6px;border:1px solid #ddd;margin-bottom:6px}
+  .filterPanel label{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:13px}
+  tbody td{padding:10px;border-bottom:1px solid #f3f4ff;vertical-align:middle;text-align:left;padding-left:12px;background:transparent}
+  tr:hover td{background:#fbfbff}
+  .error{color:#b00020;font-weight:700;margin:8px 0}
+  .sortBtn{margin-left:8px;cursor:pointer;font-size:20px;border:0;background:transparent}<!---->
+  /* image button */
+  .imgBtn{padding:6px 10px;border-radius:6px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+  /* modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999}
+  .modal .box{max-width:92%;max-height:92%;background:#fff;padding:12px;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,0.4);display:flex;flex-direction:column;gap:8px;position:relative}
+  .modal img{max-width:90vw;max-height:80vh;display:block;margin:0 auto}
+  .closeX{position:absolute;right:8px;top:8px;background:#fff;border-radius:6px;border:0;padding:6px 8px;cursor:pointer;font-weight:700}
+  /* responsive */
+  @media (max-width:900px){
+    .filterPanel{left:6px;right:auto;width:88vw}
+    thead th, tbody td{font-size:13px;padding:8px}
+  }
+</style>
+</head>
+<body>
+  <!--<img src="https://i.imgur.com/8SCvUon.jpeg" alt="排球少年封面" class="title-image">-->
+  <img src="https://i.imgur.com/8SCvUon.jpeg" alt="Haikyuu Banner" style="width:80%;margin: 0 auto;border-radius: 12px;margin-bottom: 16px;display: block;"/>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>排球少年 TOUCH THE DREAM 日服卡池日曆</h1>
+        <div class="note">標題旁可做篩選；日期欄提供排序；Banner提供活動圖。</div>
+        <div class="note">此卡池日曆只記錄異裝與Super Icion。</div>
+        <div class="note">BY 朴志晟的小寶貝 (偷偷宣傳 歡迎加入«打手出界»社團呦)</div>
+      </div>
+    </header>
+
+    <div id="error" class="error" role="alert" aria-live="polite"></div>
+
+    <div class="table-wrap" id="tableWrap">
+      <table id="sheetTable" aria-live="polite">
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- image modal -->
+  <div class="modal" id="imgModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="box" role="document">
+      <button class="closeX" id="modalClose">✕</button>
+      <img id="modalImg" alt="預覽圖片">
+      <div id="modalCaption" style="font-size:0.95rem;color:#444;text-align:center"></div>
+    </div>
+  </div>
+
+<script>
+/* CONFIG */
+const SHEET_ID = "1sotKHTEEDLEV_3-QgxwpYQKwKq9rDeKq1ZHcu96_eik";
+const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+const DATE_HEADERS = ["開始日期","結束日期","SI開始日期","SI結束日期"];
+const IMAGE_FIELD = "banner1"; // use 'banner' (not banner1)
+
+/* DOM refs */
+const thead = document.getElementById('thead');
+const tbody = document.getElementById('tbody');
+const errorEl = document.getElementById('error');
+const imgModal = document.getElementById('imgModal');
+const modalImg = document.getElementById('modalImg');
+const modalCaption = document.getElementById('modalCaption');
+document.getElementById('modalClose').addEventListener('click', closeModal);
+imgModal.addEventListener('click', (e)=>{ if(e.target===imgModal) closeModal(); });
+
+function closeModal(){ imgModal.style.display='none'; imgModal.setAttribute('aria-hidden','true'); modalImg.src=''; modalCaption.textContent=''; }
+function openModal(src, caption){ modalImg.src = src; modalCaption.textContent = caption || ''; imgModal.style.display='flex'; imgModal.setAttribute('aria-hidden','false'); }
+
+/* gviz JSONP receiver */
+window.google = window.google || {};
+window.google.visualization = window.google.visualization || {};
+window.google.visualization.Query = window.google.visualization.Query || {};
+window.google.visualization.Query.setResponse = function(resp){
+  try {
+    if(!resp || !resp.table) throw new Error("回傳格式不是預期的 table");
+    renderFromGviz(resp.table);
+  } catch (e) {
+    errorEl.textContent = "解析資料失敗：" + e.message;
+  }
+};
+
+function injectGvizScript(url){
+  errorEl.textContent = "";
+  document.querySelectorAll('script[data-gviz]').forEach(s => s.remove());
+  const s = document.createElement('script'); s.src = url; s.setAttribute('data-gviz','1');
+  s.onerror = () => errorEl.textContent = "無法載入 gviz 資料。請確認試算表已公開。";
+  document.head.appendChild(s);
+}
+injectGvizScript(gvizUrl);
+setTimeout(()=>{ if(!tbody.innerHTML.trim()) errorEl.textContent = "尚未收到資料，請確認試算表已發佈。"; },8000);
+
+/* utils */
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+function escapeAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
+function visibleLabel(raw){ return String(raw||'').replace(/\{[^}]*\}/g,'').trim(); }
+function hashCode(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return (h>>>0).toString(36); }
+function detectImageUrl(s){
+  if(!s) return null; s = s.trim();
+  if(s.startsWith('data:image/')) return s;
+  try{ const u = new URL(s);
+    if(/\.(jpe?g|png|gif|webp|svg)(\?.*)?$/i.test(u.pathname)) return s;
+    if(u.hostname.includes('imgur')||u.hostname.includes('i.imgur')||u.hostname.includes('drive.google')||u.hostname.includes('photos.google')) return s;
+  }catch(e){}
+  return null;
+}
+
+/* parsing segments like: 文字{color:#000;size:10} more{bg:#fff} */
+function parseSegments(rawText){
+  const parts = []; let cursor = 0;
+  const re = /\{([\s\S]*?)\}/g;
+  let m = re.exec(rawText);
+  while(m){
+    const before = rawText.slice(cursor, m.index);
+    if(before.length>0) parts.push({text: before, marker: m[1]});
+    cursor = re.lastIndex;
+    m = re.exec(rawText);
+  }
+  const rest = rawText.slice(cursor);
+  if(rest.length>0) parts.push({text: rest, marker: null});
+  if(parts.length===0) return [{text: rawText, style:{}}];
+  return parts.map(p=>{
+    const style={};
+    if(p.marker){
+      p.marker.split(';').map(s=>s.trim()).filter(Boolean).forEach(pair=>{
+        const [k,v] = pair.split(':').map(s=>s.trim());
+        if(!k) return;
+        if(k==='color') style.color = v;
+        if(k==='bg' || k==='background') style.backgroundColor = v;
+        if(k==='size') style.fontSize = /^\d+$/.test(v) ? v + 'px' : v;
+        if(k==='bold' && (v==='1'||v==='true')) style.fontWeight='700';
+        if(k==='italic' && (v==='1'||v==='true')) style.fontStyle='italic';
+      });
+    }
+    return {text: p.text, style};
+  });
+}
+
+/* apply styles — default size 15px */
+function applySegmentStylesToAll(){
+  const defaultColor = '#000000';
+  const defaultSize = '15px';
+  tbody.querySelectorAll('td[data-raw]').forEach(td=>{
+    const raw = td.dataset.raw || '';
+    if(!raw){ td.innerHTML = ''; return; }
+    const segs = parseSegments(raw);
+    td.innerHTML = segs.map(seg=>{
+      const t = escapeHtml(seg.text);
+      const s = Object.assign({}, seg.style);
+      if(!s.color) s.color = defaultColor;
+      if(!s.fontSize) s.fontSize = defaultSize;
+      const styleParts = [];
+      if(s.color) styleParts.push(`color:${s.color}`);
+      if(s.fontSize) styleParts.push(`font-size:${s.fontSize}`);
+      if(s.backgroundColor) styleParts.push(`background-color:${s.backgroundColor}`);
+      if(s.fontWeight) styleParts.push(`font-weight:${s.fontWeight}`);
+      if(s.fontStyle) styleParts.push(`font-style:${s.fontStyle}`);
+      const styleStr = styleParts.join(';');
+      return s.backgroundColor
+        ? `<span style="${styleStr};display:inline-block;padding:0 2px;border-radius:2px">${t}</span>`
+        : `<span style="${styleStr}">${t}</span>`;
+    }).join('');
+    if(segs.length===1 && segs[0].style && segs[0].style.backgroundColor){
+      td.style.backgroundColor = segs[0].style.backgroundColor;
+    } else td.style.backgroundColor = '';
+    td.style.fontSize = defaultSize;
+    td.style.whiteSpace = 'pre-wrap';
+  });
+}
+
+/* ----- render from gviz table ----- */
+let lastRenderedRows = [];
+function renderFromGviz(table){
+  errorEl.textContent = '';
+  const cols = (table.cols || []).map(c => c.label || '');
+  const rows = (table.rows || []);
+  const imageColIndex = cols.findIndex(c => c === IMAGE_FIELD);
+
+  // visible columns map (exclude image col)
+  const visibleCols = cols.map((c,i)=> ({name:c, idx:i})).filter(x=> x.idx !== imageColIndex);
+
+  lastRenderedRows = rows.map(r => (r.c||[]).map(cell=>{
+    if(!cell) return '';
+    if(cell.f !== undefined && cell.f !== null) return String(cell.f);
+    if(cell.v !== undefined && cell.v !== null) return String(cell.v);
+    return '';
+  }));
+
+  // build head (default date headers to ASC ▲)
+  let headHtml = '<tr>';
+  visibleCols.forEach(colObj=>{
+    const c = colObj.name;
+    const idx = colObj.idx;
+    if(DATE_HEADERS.includes(c)){
+      headHtml += `<th data-col="${idx}">${escapeHtml(c)} <button class="sortBtn" data-col="${idx}" data-order="asc">▲</button></th>`;
+    } else {
+      headHtml += `<th data-col="${idx}">${escapeHtml(c)} <button class="filterBtn" data-col="${idx}">⋮</button></th>`;
+    }
+  });
+  headHtml += `<th>Banner</th></tr>`;
+  thead.innerHTML = headHtml;
+
+  // attach events
+  thead.querySelectorAll('.filterBtn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const th = btn.closest('th');
+      const col = Number(btn.dataset.col);
+      toggleFilterPanel(th, col);
+    });
+  });
+  thead.querySelectorAll('.sortBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const col = Number(btn.dataset.col);
+      const cur = btn.dataset.order;
+      const next = cur === 'asc' ? 'desc' : 'asc';
+      // reset others
+      thead.querySelectorAll('.sortBtn').forEach(b=>{ b.dataset.order = 'none'; b.textContent = '▲'; });
+      btn.dataset.order = next;
+      btn.textContent = next === 'asc' ? '▲' : '▼';
+      applySortAndFilters();
+    });
+  });
+
+  // build body — use visibleCols mapping so indices align with original sheet
+  let bodyHtml = '';
+  rows.forEach(r=>{
+    const cells = (r.c||[]).map(cell=>{
+      if(!cell) return '';
+      if(cell.f !== undefined && cell.f !== null) return String(cell.f);
+      if(cell.v !== undefined && cell.v !== null) return String(cell.v);
+      return '';
+    });
+    bodyHtml += '<tr>';
+    visibleCols.forEach(colObj=>{
+      const text = cells[colObj.idx] || '';
+      bodyHtml += `<td data-col="${colObj.idx}" data-raw="${escapeAttr(text)}">${escapeHtml(text)}</td>`;
+    });
+    const imgVal = imageColIndex >= 0 ? (cells[imageColIndex] || '') : '';
+    const imgUrl = detectImageUrl(imgVal);
+    if(imgUrl) bodyHtml += `<td><button class="imgBtn" data-src="${escapeAttr(imgUrl)}">查看</button></td>`;
+    else bodyHtml += `<td></td>`;
+    bodyHtml += '</tr>';
+  });
+  tbody.innerHTML = bodyHtml;
+
+  // wire image buttons
+  tbody.querySelectorAll('.imgBtn').forEach(b=> b.addEventListener('click', ()=> openModal(b.dataset.src)));
+
+  applySegmentStylesToAll();
+  closeAllFilterPanels();
+}
+
+/* ----- Filter + Sort implementation ----- */
+let activeFilters = {};
+let activeDateSort = {col: null, order: 'asc'};
+
+function toggleFilterPanel(th, col){
+  // remove existing
+  const existing = document.querySelector('.filterPanel');
+  if(existing) existing.remove();
+
+  const panel = document.createElement('div');
+  panel.className = 'filterPanel';
+
+  // position near th (fixed so it stays during scroll)
+  const rect = th.getBoundingClientRect();
+  const left = Math.max(8, rect.left + window.scrollX);
+  const top = Math.max(8, rect.bottom + window.scrollY + 6);
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+
+  panel.innerHTML = `
+    <input class="search" placeholder="搜尋..." />
+    <!--<div style="margin:6px 0; display:flex; gap:8px; align-items:center;">
+      <label style="font-size:13px"><input type="checkbox" class="masterCheck" checked />全選</label>
+    </div>-->
+	<div style="margin:6px 0; display:flex; align-items:center;">
+		<input type="checkbox" class="masterCheck" checked />
+		<span style="font-size:13px; margin-left:4px;">全選</span>
+	</div>
+    <div class="items"></div>
+    <div style="margin-top:8px;text-align:right"><button class="closePanel">關閉</button></div>
+  `;
+  document.body.appendChild(panel);
+
+  const searchInput = panel.querySelector('.search');
+  const itemsWrap = panel.querySelector('.items');
+  const closeBtn = panel.querySelector('.closePanel');
+  const master = panel.querySelector('.masterCheck');
+
+  closeBtn.addEventListener('click', closeAllFilterPanels);
+
+  // collect unique raw values and their visible labels
+  const vals = new Map();
+  tbody.querySelectorAll('tr').forEach(tr=>{
+    const tds = tr.querySelectorAll('td[data-raw]');
+    if(col < tds.length){
+      const raw = (tds[col].dataset.raw || '').trim();
+      if(raw !== '') vals.set(raw, visibleLabel(raw));
+    }
+  });
+  const sortedVals = Array.from(vals.entries()).sort((a,b)=> a[1].localeCompare(b[1],'zh-Hant-u-co-pinyin'));
+
+  function render(filter=''){
+    itemsWrap.innerHTML = '';
+    sortedVals.filter(([,label])=> label.includes(filter)).forEach(([raw,label])=>{
+      const checked = activeFilters[col] && activeFilters[col].has(raw);
+      const lbl = escapeHtml(label);
+      const div = document.createElement('label');
+      div.style.display = 'block';
+      div.innerHTML = `<input type="checkbox" data-val="${escapeAttr(raw)}" ${checked? 'checked':''}/> <span>${lbl}</span>`;
+      itemsWrap.appendChild(div);
+    });
+    const boxes = itemsWrap.querySelectorAll('input[type="checkbox"]');
+    master.checked = boxes.length>0 && Array.from(boxes).every(cb=>cb.checked);
+  }
+  render('');
+
+  searchInput.addEventListener('input', ()=> render(searchInput.value));
+
+  itemsWrap.addEventListener('change', (e)=>{
+    const cb = e.target;
+    if(cb && cb.matches('input[type="checkbox"]')){
+      const v = cb.dataset.val;
+      if(!activeFilters[col]) activeFilters[col] = new Set();
+      cb.checked ? activeFilters[col].add(v) : activeFilters[col].delete(v);
+      if(activeFilters[col] && activeFilters[col].size===0) delete activeFilters[col];
+      applySortAndFilters();
+      const all = itemsWrap.querySelectorAll('input[type="checkbox"]');
+      master.checked = all.length>0 && Array.from(all).every(x=>x.checked);
+    }
+  });
+
+  master.addEventListener('change', ()=>{
+    const check = master.checked;
+    const boxes = itemsWrap.querySelectorAll('input[type="checkbox"]');
+    boxes.forEach(b=> b.checked = check);
+    if(check) activeFilters[col] = new Set([...vals.keys()]);
+    else delete activeFilters[col];
+    applySortAndFilters();
+  });
+}
+
+function closeAllFilterPanels(){ document.querySelectorAll('.filterPanel').forEach(p=>p.remove()); }
+
+function applySortAndFilters(){
+  const sortBtn = thead.querySelector('.sortBtn[data-order="asc"], .sortBtn[data-order="desc"]');
+  if(sortBtn){ activeDateSort.col = Number(sortBtn.dataset.col); activeDateSort.order = sortBtn.dataset.order; }
+  else { activeDateSort.col = null; activeDateSort.order = 'none'; }
+
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const rowData = rows.map(tr=>{
+    const tds = tr.querySelectorAll('td[data-raw]');
+    const data = Array.from(tds).map(td=> (td.dataset.raw||'').trim());
+    return {tr, data};
+  });
+
+  const filtered = rowData.filter(row=>{
+    for(const colStr in activeFilters){
+      const col = Number(colStr);
+      const set = activeFilters[col];
+      const val = row.data[col] || '';
+      if(!set.has(val)) return false;
+    }
+    return true;
+  });
+
+  if(activeDateSort.col !== null && activeDateSort.order !== 'none'){
+    filtered.sort((a,b)=>{
+      const at = parseDateForSort(a.data[activeDateSort.col]);
+      const bt = parseDateForSort(b.data[activeDateSort.col]);
+      if(at===null && bt===null) return 0;
+      if(at===null) return 1;
+      if(bt===null) return -1;
+      return activeDateSort.order === 'asc' ? at - bt : bt - at;
+    });
+  }
+
+  filtered.forEach(item=> tbody.appendChild(item.tr));
+  rowData.forEach(item=> item.tr.style.display = filtered.includes(item) ? '' : 'none');
+}
+
+function parseDateForSort(s){
+  if(!s) return null;
+  const t = s.trim().replace(/\./g,'-').replace(/\//g,'-');
+  const d = new Date(t);
+  if(!isNaN(d)) return d.getTime();
+  const m = t.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
+  if(m) return new Date(Number(m[3]), Number(m[2])-1, Number(m[1])).getTime();
+  return null;
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
