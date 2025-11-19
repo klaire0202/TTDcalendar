@@ -12,6 +12,39 @@
     --text:#111;
     --muted:#666;
   }
+
+  .seg-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 12px auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+.seg-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  text-decoration: none;
+  font-size: 14px;
+  color: #0a3c60;
+  background: linear-gradient(135deg, #d7ecff, #bfe1ff);
+  border: 1px solid #9dc6e6;
+  transition: 0.2s;
+}
+
+.seg-btn.left {
+  border-radius: 12px 0 0 12px;
+}
+
+.seg-btn.right {
+  border-radius: 0 12px 12px 0;
+}
+
+.seg-btn:hover {
+  background: linear-gradient(135deg, #c5e3ff, #a8d3ff);
+}
+	
   html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans CJK TC",sans-serif;background:var(--page-bg);color:var(--text)}
   .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;padding:20px 12px;box-sizing:border-box}
   header{width:100%;max-width:1200px;display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -45,6 +78,12 @@
 </head>
 <body>
   <img src="https://i.imgur.com/8SCvUon.jpeg" alt="Haikyuu Banner" style="width:80%;margin: 0 auto;border-radius: 12px;margin-bottom: 16px;display: block;"/>
+  
+  <div class="seg-wrapper">
+  <a href="https://ttdcalculator.vercel.app/" class="seg-btn left">囤囤鼠小算盤</a>
+  <a href="https://tt-dcalendar.vercel.app/" class="seg-btn right">卡池日曆</a>
+	</div>
+	
   <div class="wrap">
     <header>
       <div>
@@ -423,6 +462,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
+
 
 
 
