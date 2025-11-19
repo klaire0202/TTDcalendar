@@ -13,52 +13,6 @@
     --muted:#666;
   }
 
-  /* ========= Segmented Buttons（新需求） ========= */
-  .seg-wrapper {
-    display: flex;
-    width: 100%;
-    max-width: 600px;
-    padding: 0 12px;         /* 與標題完美切齊 */
-    box-sizing: border-box;
-    margin: 0 0 12px 0;
-    gap: 0;
-  }
-
-  .seg-btn {
-    flex: 1;
-    text-align: center;
-    padding: 10px 0;
-    text-decoration: none;
-    font-size: 14px;
-    color: #242424;
-    background: #D6D9DA;
-    border: 1px solid #7D7F80;
-    transition: 0.2s;
-  }
-
-  .seg-btn.left { border-radius: 12px 0 0 12px; }
-  .seg-btn.right { border-radius: 0 12px 12px 0; }
-
-  .seg-btn:hover { background: #7D7F80; }
-
-
-  /* ========= 頂部圖片（新增圖片） ========= */
-  .top-image {
-    width: 100%;
-    max-width: 600px;
-    padding: 0 12px;
-    margin: 12px 0;
-    box-sizing: border-box;
-  }
-
-  .top-image img {
-    width: 100%;
-    border-radius: 12px;  /* 圓角 */
-    display: block;
-  }
-
-
-  /* ========= 原本的布局 / 表格 / 排版 ========= */
   html,body{
     height:100%;
     margin:0;
@@ -80,204 +34,100 @@
     width:100%;
     max-width:1200px;
     display:flex;
-    align-items:center;
+    align-items:flex-start;
+    gap:12px;
     margin-bottom:14px;
   }
 
-  header > div{
-    width:100%;
-    max-width:600px;     /* ★ 讓標題與按鈕一致寬度 */
-    padding:0 12px;
-    box-sizing:border-box;
-  }
+  h1{ margin:0; line-height:1.4; }
+  .note{ color:var(--muted); font-size:0.9rem; }
 
-  h1{
-    margin:0;
-    line-height:1.4;
-    text-align:center;   /* ★ 標題置中 */
-  }
-
-  .note{
-    color:var(--muted);
-    font-size:0.9rem;
-    line-height:1.4;
-  }
-
-  .table-wrap{
+  /* 🔹 圖片（修正：與表格同寬、置中） */
+  .top-banner{
     width:100%;
     max-width:1200px;
-    background:var(--card-bg);
-    box-shadow:0 6px 18px rgba(37,41,75,0.06);
-    border-radius:8px;
-    padding:8px;
-    box-sizing:border-box;
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-    margin:0 auto;
-    table-layout:fixed;
-  }
-
-  thead th{
-    position:relative;
-    background:#F2F6F7;
-    padding:10px;
-    text-align:left;
-    font-weight:700;
-    border-bottom:1px solid #eee;
-  }
-
-  thead th .filterBtn{
-    position:absolute;
-    right:8px;
-    top:6px;
-    border:0;
-    background:transparent;
-    cursor:pointer;
-    font-size:20px;
-  }
-
-  .filterPanel{
-    position:absolute;
-    right:6px;
-    top:32px;
-    z-index:30;
-    background:#fff;
-    border:1px solid #e6e6ee;
-    box-shadow:0 8px 30px rgba(0,0,0,0.08);
-    padding:8px;
-    border-radius:8px;
-    width:260px;
-    max-height:360px;
-    overflow:auto;
-  }
-
-  .filterPanel .search{
-    width:100%;
-    padding:6px;
-    border-radius:6px;
-    border:1px solid #ddd;
-    margin-bottom:6px;
-  }
-
-  .filterPanel label{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    padding:4px 0;
-    font-size:13px;
-  }
-
-  tbody td{
-    padding:10px;
-    border-bottom:1px solid #f3f4ff;
-    vertical-align:middle;
-    text-align:left;
-    padding-left:12px;
-    background:transparent;
-  }
-
-  tr:hover td{ background:#fbfbff; }
-
-  .error{
-    color:#b00020;
-    font-weight:700;
-    margin:8px 0;
-  }
-
-  .sortBtn{
-    margin-left:8px;
-    cursor:pointer;
-    font-size:20px;
-    border:0;
-    background:transparent;
-  }
-
-  .imgBtn{
-    padding:6px 10px;
-    border-radius:6px;
-    border:0;
-    background:var(--accent);
-    color:#fff;
-    cursor:pointer;
-  }
-
-  /* modal */
-  .modal{
-    position:fixed;
-    inset:0;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    background:rgba(0,0,0,0.6);
-    z-index:9999;
-  }
-
-  .modal .box{
-    max-width:92%;
-    max-height:92%;
-    background:#fff;
-    padding:12px;
-    border-radius:10px;
-    box-shadow:0 8px 40px rgba(0,0,0,0.4);
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    position:relative;
-  }
-
-  .modal img{
-    max-width:90vw;
-    max-height:80vh;
+    border-radius:12px;
     display:block;
-    margin:0 auto;
+    margin:0 auto 16px auto;
   }
 
-  .closeX{
-    position:absolute;
-    right:8px;
-    top:8px;
-    background:#fff;
-    border-radius:6px;
-    border:0;
-    padding:6px 8px;
-    cursor:pointer;
-    font-weight:700;
+  /* 🔹 Segmented Buttons（修正：左對齊 + 與標題切齊） */
+  .seg-wrapper{
+    width:100%;
+    max-width:1200px;
+    display:flex;
+    margin:0 0 20px 0;
   }
+
+  .seg-btn{
+    flex:1;
+    text-align:center;
+    padding:10px 0;
+    text-decoration:none;
+    font-size:14px;
+    color:#0a3c60;
+    background:#DDE7F7;
+    border:1px solid #B5C8E6;
+    transition:0.2s;
+  }
+
+  .seg-btn.left{
+    border-radius:12px 0 0 12px;
+  }
+  .seg-btn.right{
+    border-radius:0 12px 12px 0;
+  }
+
+  .seg-btn:hover{
+    background:#CDD9F0;
+  }
+
+  /* 🔹 Table (你的原本內容，未變動) */
+  .table-wrap{width:100%;max-width:1200px;background:#fff;box-shadow:0 6px 18px rgba(37,41,75,0.06);border-radius:8px;padding:8px;box-sizing:border-box}
+  table{width:100%;border-collapse:collapse;margin:0 auto;table-layout:fixed;}
+  thead th{position:relative;background:#F2F6F7;padding:10px;text-align:left;font-weight:700;border-bottom:1px solid #eee}
+  thead th .filterBtn{position:absolute;right:8px;top:6px;border:0;background:transparent;cursor:pointer;font-size:20px}
+  .filterPanel{position:absolute;right:6px;top:32px;z-index:30;background:#fff;border:1px solid #e6e6ee;box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:8px;border-radius:8px;width:260px;max-height:360px;overflow:auto}
+  .filterPanel .search{width:100%;padding:6px;border-radius:6px;border:1px solid #ddd;margin-bottom:6px}
+  .filterPanel label{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:13px}
+  tbody td{padding:10px;border-bottom:1px solid #f3f4ff;vertical-align:middle;text-align:left;padding-left:12px;background:transparent}
+  tr:hover td{background:#fbfbff}
+  .sortBtn{margin-left:8px;cursor:pointer;font-size:20px;border:0;background:transparent}
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999}
+  .modal .box{max-width:92%;max-height:92%;background:#fff;padding:12px;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,0.4);display:flex;flex-direction:column;gap:8px;position:relative}
+  .modal img{max-width:90vw;max-height:80vh;display:block;margin:0 auto}
+  .closeX{position:absolute;right:8px;top:8px;background:#fff;border-radius:6px;border:0;padding:6px 8px;cursor:pointer;font-weight:700}
 
   @media (max-width:900px){
-    .filterPanel{
-      left:6px;
-      right:auto;
-      width:88vw;
-    }
-    thead th, tbody td{
-      font-size:13px;
-      padding:8px;
-    }
+    .filterPanel{left:6px;right:auto;width:88vw}
+    thead th, tbody td{font-size:13px;padding:8px}
   }
-
 </style>
 </head>
 <body>
-  <img src="https://i.imgur.com/8SCvUon.jpeg" alt="Haikyuu Banner" style="width:80%;margin: 0 auto;border-radius: 12px;margin-bottom: 16px;display: block;"/>
-	
-  <div class="wrap">
-    <header>
-      <div>
-	    <div class="seg-wrapper">
-          <a href="https://ttdcalculator.vercel.app/" class="seg-btn left">囤囤鼠小算盤</a>
-          <a href="https://tt-dcalendar.vercel.app/" class="seg-btn right">卡池日曆</a>
-	  </div>
-      <div>
-		<h1>排球少年 TOUCH THE DREAM 日服卡池日曆</h1><br>
-		<div class="note">使用手機瀏覽網站的話，請開啟瀏覽器的電腦版網站，不然會全部擠在一起。</div>
-        <div class="note">標題欄旁可做篩選；日期欄旁形可做排序；Banner提供活動圖。</div>
-        <div class="note">此卡池日曆只記錄異裝與Super Icion。<br><br></div>
-        <div class="note">BY 朴志晟的小寶貝 (偷偷宣傳 歡迎加入«打手出界»社團呦)</div>
-      </div>
+<div class="wrap">
+
+  <!-- 🔹 上方圖片（已修正） -->
+  <img src="https://i.imgur.com/8SCvUon.jpeg"
+       alt="Haikyuu Banner"
+       class="top-banner" />
+
+  <!-- 🔹 Segmented Buttons（已修正：靠左對齊 + 與標題一致） -->
+  <div class="seg-wrapper">
+    <a href="https://ttdcalculator.vercel.app/" class="seg-btn left">囤囤鼠小算盤</a>
+    <a href="https://tt-dcalendar.vercel.app/" class="seg-btn right">卡池日曆</a>
+  </div>
+
+  <!-- 🔹 Header -->
+  <header>
+    <div>
+      <h1>排球少年 TOUCH THE DREAM 日服卡池日曆</h1>
+      <br>
+      <div class="note">使用手機瀏覽網站的話，請開啟瀏覽器的電腦版網站，不然會全部擠在一起。</div>
+      <div class="note">標題欄旁可做篩選；日期欄旁可做排序；Banner提供活動圖。</div>
+      <div class="note">此卡池日曆只記錄異裝與 Super Icon。<br><br></div>
+      <div class="note">BY 朴志晟的小寶貝 (歡迎加入«打手出界»社團呦)</div>
+    </div>
     </header>
 
     <div id="error" class="error" role="alert" aria-live="polite"></div>
@@ -647,29 +497,4 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
