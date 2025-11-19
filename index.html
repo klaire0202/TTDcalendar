@@ -53,29 +53,31 @@
 
   /* 🔹 Segmented Buttons（修正：左對齊 + 與標題切齊） */
   .seg-wrapper{
-    width:100%;
-    max-width:1200px;
-    display:flex;
-    margin:0 0 20px 0;
+  width:100%;
+  max-width:1200px;
+  display:flex;
+  gap:0;
+  margin:0 0 20px 0;
   }
 
   .seg-btn{
-    flex:1;
-    text-align:center;
-    padding:10px 0;
+    padding:8px 18px;
     text-decoration:none;
     font-size:14px;
-    color:#0a3c60;
-    background:#DDE7F7;
-    border:1px solid #B5C8E6;
+    color:#606262;
+    background:#F2F6FF;
+    border:1px solid #D8DCE4;
     transition:0.2s;
+    display:inline-block;
   }
 
   .seg-btn.left{
     border-radius:12px 0 0 12px;
   }
+
   .seg-btn.right{
     border-radius:0 12px 12px 0;
+    border-left:0;
   }
 
   .seg-btn:hover{
@@ -497,4 +499,3 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
-
