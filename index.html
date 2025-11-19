@@ -42,7 +42,6 @@
   h1{ margin:0; line-height:1.4; }
   .note{ color:var(--muted); font-size:0.9rem; }
 
-  /* 🔹 圖片（修正：與表格同寬、置中） */
   .top-banner{
     width:100%;
     max-width:1200px;
@@ -51,7 +50,6 @@
     margin:0 auto 16px auto;
   }
 
-  /* 🔹 Segmented Buttons（修正：左對齊 + 與標題切齊） */
   .seg-wrapper{
   width:100%;
   max-width:1200px;
@@ -63,7 +61,7 @@
   .seg-btn{
     padding:8px 18px;
     text-decoration:none;
-    font-size:14px;
+    font-size:15px;
     color:#606262;
     background:#F2F6FF;
     border:1px solid #D8DCE4;
@@ -84,7 +82,6 @@
     background:#CDD9F0;
   }
 
-  /* 🔹 Table (你的原本內容，未變動) */
   .table-wrap{width:100%;max-width:1200px;background:#fff;box-shadow:0 6px 18px rgba(37,41,75,0.06);border-radius:8px;padding:8px;box-sizing:border-box}
   table{width:100%;border-collapse:collapse;margin:0 auto;table-layout:fixed;}
   thead th{position:relative;background:#F2F6F7;padding:10px;text-align:left;font-weight:700;border-bottom:1px solid #eee}
@@ -109,18 +106,15 @@
 <body>
 <div class="wrap">
 
-  <!-- 🔹 上方圖片（已修正） -->
   <img src="https://i.imgur.com/8SCvUon.jpeg"
        alt="Haikyuu Banner"
        class="top-banner" />
 
-  <!-- 🔹 Segmented Buttons（已修正：靠左對齊 + 與標題一致） -->
   <div class="seg-wrapper">
     <a href="https://ttdcalculator.vercel.app/" class="seg-btn left">囤囤鼠小算盤</a>
     <a href="https://tt-dcalendar.vercel.app/" class="seg-btn right">卡池日曆</a>
   </div>
 
-  <!-- 🔹 Header -->
   <header>
     <div>
       <h1>排球少年 TOUCH THE DREAM 日服卡池日曆</h1>
@@ -499,4 +493,5 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
+
 
